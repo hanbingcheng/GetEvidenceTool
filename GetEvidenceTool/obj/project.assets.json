@@ -89,11 +89,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\CSharp\\GetEvidenceTool\\GetEvidenceTool\\GetEvidenceTool.csproj",
+      "projectUniqueName": "D:\\CSharp\\GetEvidenceTool\\GetEvidenceTool\\GetEvidenceTool\\GetEvidenceTool.csproj",
       "projectName": "GetEvidenceTool",
-      "projectPath": "D:\\CSharp\\GetEvidenceTool\\GetEvidenceTool\\GetEvidenceTool.csproj",
+      "projectPath": "D:\\CSharp\\GetEvidenceTool\\GetEvidenceTool\\GetEvidenceTool\\GetEvidenceTool.csproj",
       "packagesPath": "C:\\Users\\cheng-hn\\.nuget\\packages\\",
-      "outputPath": "D:\\CSharp\\GetEvidenceTool\\GetEvidenceTool\\obj\\",
+      "outputPath": "D:\\CSharp\\GetEvidenceTool\\GetEvidenceTool\\GetEvidenceTool\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\cheng-hn\\AppData\\Roaming\\NuGet\\NuGet.Config",

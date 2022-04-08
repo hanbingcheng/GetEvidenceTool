@@ -1,5 +1,6 @@
 using Npgsql;
 using System.Configuration;
+using System.Diagnostics;
 using System.Text;
 
 namespace GetEvidenceTool
@@ -12,18 +13,49 @@ namespace GetEvidenceTool
         private bool isExportTable = false;
         private string connString = string.Empty;
         private string nullString = string.Empty;
+        private string winmergePath = string.Empty;
 
         private string startTime = string.Empty;
         private List<string> logs = new List<string>();
         private string location = string.Empty;
         private string folderName = string.Empty;
         private string rootDir = string.Empty;
+        private string beforeDir = string.Empty;
+        private string afterDir = string.Empty;
 
         public MainForm()
         {
             InitializeComponent();
 
             this.LoadConfig();
+
+            if (this.logs.Count == 0)
+            {
+                this.chkLog.Checked = false;
+                this.chkLog.Enabled = false;
+            }
+            else
+            {
+                this.chkLog.Checked = true;
+            }
+            if (!this.isExportTable)
+            {
+                this.chkTable.Checked = false;
+                this.chkTable.Enabled = false;
+            }
+            else
+            {
+                this.chkTable.Checked = true;
+            }
+            if (string.IsNullOrEmpty(this.winmergePath))
+            {
+                this.chkDiff.Checked = false;
+                this.chkDiff.Enabled = false;
+            }
+            else
+            {
+                this.chkDiff.Checked = true;
+            }
         }
 
         private void LoadConfig()
@@ -50,32 +82,32 @@ namespace GetEvidenceTool
                 this.logs.Add(log3);
             }
             this.loggEncoding = ConfigurationManager.AppSettings["logEncoding"] ?? "UTF-8";
-            if ("true".Equals(ConfigurationManager.AppSettings["isExportTable"]))
+            string host = ConfigurationManager.AppSettings["host"] ?? "";
+            string port = ConfigurationManager.AppSettings["port"] ?? "";
+            string user = ConfigurationManager.AppSettings["user"] ?? "";
+            string passwd = ConfigurationManager.AppSettings["password"] ?? "";
+            string dbname = ConfigurationManager.AppSettings["dbname"] ?? "";
+            if (string.IsNullOrEmpty(host) ||
+                string.IsNullOrEmpty(port) ||
+                string.IsNullOrEmpty(user) ||
+                string.IsNullOrEmpty(passwd) ||
+                string.IsNullOrEmpty(dbname))
+            {
+                this.isExportTable = false;
+            } 
+            else
             {
                 this.isExportTable = true;
-                string host = ConfigurationManager.AppSettings["host"] ?? "";
-                string port = ConfigurationManager.AppSettings["port"] ?? "";
-                string user = ConfigurationManager.AppSettings["user"] ?? "";
-                string passwd = ConfigurationManager.AppSettings["password"] ?? "";
-                string dbname = ConfigurationManager.AppSettings["dbname"] ?? "";
-                if (string.IsNullOrEmpty(host) ||
-                    string.IsNullOrEmpty(port) ||
-                    string.IsNullOrEmpty(user) ||
-                    string.IsNullOrEmpty(passwd) ||
-                    string.IsNullOrEmpty(dbname))
-                {
-                    MessageBox.Show("db connection setting is invalid on config file");
-                    return;
-                }
                 this.connString = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4}", host, port, user, passwd, dbname);
-                this.nullString = ConfigurationManager.AppSettings["nullString"] ?? "";
+                this.nullString = ConfigurationManager.AppSettings["nullString"] ?? String.Empty;
             }
 
+            this.winmergePath = ConfigurationManager.AppSettings["WinMerge"] ?? "";
         }
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-           if (!this.IsReady())
+            if (!this.IsReady())
             {
                 return;
             }
@@ -91,13 +123,13 @@ namespace GetEvidenceTool
             }
             Directory.CreateDirectory(rootDir);
 
-            string beforeDir = Path.Combine(rootDir, DateTime.Now.ToString("yyyyMMddHHmmss") + "_before");
+            this.beforeDir = Path.Combine(rootDir, DateTime.Now.ToString("yyyyMMddHHmmss") + "_before");
             Directory.CreateDirectory(beforeDir);
             this.startTime = DateTime.Now.ToString(this.datetimeFormat);
 
             this.console.Clear();
             this.OutputToConsole("collect evidence on start");
-            this.ExportTables(beforeDir);
+            this.ExportTables(this.beforeDir);
 
             this.btnStop.Enabled = true;
         }
@@ -106,12 +138,13 @@ namespace GetEvidenceTool
         {
             this.btnStop.Enabled = false;
 
-            string afterDir = Path.Combine(rootDir, DateTime.Now.ToString("yyyyMMddHHmmss") + "_after");
-            Directory.CreateDirectory(afterDir);
+            this.afterDir = Path.Combine(rootDir, DateTime.Now.ToString("yyyyMMddHHmmss") + "_after");
+            Directory.CreateDirectory(this.afterDir);
 
             this.OutputToConsole("collect evidence on end");
-            this.CollectLog(afterDir); 
-            this.ExportTables(afterDir); 
+            this.CollectLog(this.afterDir);
+            this.ExportTables(this.afterDir);
+            this.RunWinMerge();
 
             this.btnLocation.Enabled = true;
             this.txtFolderName.ReadOnly = false;
@@ -160,16 +193,21 @@ namespace GetEvidenceTool
 
         private void CollectLog(string path)
         {
-            foreach(string logPath in this.logs)
+            if (!this.chkLog.Checked)
+            {
+                return;
+            }
+
+            foreach (string logPath in this.logs)
             {
                 OutputToConsole(String.Format("collect log from: {0}", logPath));
 
                 string filename = Path.GetFileName(logPath);
-                string outputLogPath = Path.Combine(path,filename);
+                string outputLogPath = Path.Combine(path, filename);
                 string line = string.Empty;
                 bool find = false;
-                using(FileStream fs = new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                using(StreamReader sr = new StreamReader(fs, Encoding.GetEncoding(this.loggEncoding)))
+                using (FileStream fs = new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (StreamReader sr = new StreamReader(fs, Encoding.GetEncoding(this.loggEncoding)))
                 using (StreamWriter sw = new StreamWriter(outputLogPath, true, Encoding.GetEncoding(this.loggEncoding)))
                 {
                     while (-1 < sr.Peek())
@@ -196,13 +234,13 @@ namespace GetEvidenceTool
 
         private void ExportTables(string path)
         {
-            if (!this.isExportTable)
+            if (!this.chkTable.Checked || !this.isExportTable)
             {
-                return;                                           
+                return;
             }
 
             string exportTablesFilePath = Path.Combine(Directory.GetCurrentDirectory(), "export_tables.txt");
-            if(!File.Exists(exportTablesFilePath))
+            if (!File.Exists(exportTablesFilePath))
             {
                 MessageBox.Show("export_tables.txt is not exist on app location.");
                 return;
@@ -222,7 +260,7 @@ namespace GetEvidenceTool
                         if (data.Length == 2)
                         {
                             string csvPath = Path.Combine(path, data[0] + ".csv");
-                           this. OutputToConsole(String.Format("export data from table: {0} to {1}.", data[0], csvPath));
+                            this.OutputToConsole(String.Format("export data from table: {0} to {1}.", data[0], csvPath));
                             this.ExportDataToCSV(csvPath, data[1]);
                         }
                     }
@@ -267,7 +305,8 @@ namespace GetEvidenceTool
                             else
                             {
                                 builder.Append(dr[i]);
-                            }                            builder.Append(dr[i] ?? this.nullString);
+                            }
+                            builder.Append(dr[i] ?? this.nullString);
                             if (i != dr.FieldCount - 1)
                             {
                                 builder.Append(",");
@@ -279,6 +318,25 @@ namespace GetEvidenceTool
                 }
 
             }
+        }
+
+        private void RunWinMerge()
+        {
+            if (!this.chkDiff.Checked ||
+                string.IsNullOrEmpty(this.winmergePath) ||
+                !File.Exists(this.winmergePath))
+            {
+                return;
+            }
+
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.CreateNoWindow = true;
+            startInfo.UseShellExecute = false;
+            startInfo.FileName = this.winmergePath;
+            startInfo.WindowStyle = ProcessWindowStyle.Normal;
+            startInfo.Arguments = this.beforeDir + " " + this.afterDir;
+
+            Process.Start(startInfo);
         }
     }
 }

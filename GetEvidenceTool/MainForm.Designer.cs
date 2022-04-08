@@ -37,12 +37,15 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.btnLocation = new System.Windows.Forms.Button();
             this.txtLocation = new System.Windows.Forms.TextBox();
+            this.chkLog = new System.Windows.Forms.CheckBox();
+            this.chkTable = new System.Windows.Forms.CheckBox();
+            this.chkDiff = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnStart
             // 
             this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnStart.Location = new System.Drawing.Point(657, 12);
+            this.btnStart.Location = new System.Drawing.Point(833, 12);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(109, 55);
             this.btnStart.TabIndex = 0;
@@ -58,14 +61,14 @@
             this.console.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.console.Location = new System.Drawing.Point(12, 157);
             this.console.Name = "console";
-            this.console.Size = new System.Drawing.Size(780, 138);
+            this.console.Size = new System.Drawing.Size(941, 307);
             this.console.TabIndex = 1;
             this.console.Text = "";
             // 
             // btnStop
             // 
             this.btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnStop.Location = new System.Drawing.Point(657, 88);
+            this.btnStop.Location = new System.Drawing.Point(833, 88);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(109, 52);
             this.btnStop.TabIndex = 2;
@@ -80,7 +83,7 @@
             this.txtFolderName.Font = new System.Drawing.Font("Yu Gothic UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.txtFolderName.Location = new System.Drawing.Point(263, 108);
             this.txtFolderName.Name = "txtFolderName";
-            this.txtFolderName.Size = new System.Drawing.Size(290, 32);
+            this.txtFolderName.Size = new System.Drawing.Size(405, 32);
             this.txtFolderName.TabIndex = 3;
             // 
             // label1
@@ -107,7 +110,7 @@
             // 
             this.btnLocation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnLocation.Font = new System.Drawing.Font("Yu Gothic UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnLocation.Location = new System.Drawing.Point(478, 53);
+            this.btnLocation.Location = new System.Drawing.Point(593, 51);
             this.btnLocation.Name = "btnLocation";
             this.btnLocation.Size = new System.Drawing.Size(75, 31);
             this.btnLocation.TabIndex = 5;
@@ -123,14 +126,53 @@
             this.txtLocation.Font = new System.Drawing.Font("Yu Gothic UI", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.txtLocation.Location = new System.Drawing.Point(32, 53);
             this.txtLocation.Name = "txtLocation";
-            this.txtLocation.Size = new System.Drawing.Size(437, 31);
+            this.txtLocation.Size = new System.Drawing.Size(546, 31);
             this.txtLocation.TabIndex = 6;
+            // 
+            // chkLog
+            // 
+            this.chkLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkLog.AutoSize = true;
+            this.chkLog.Font = new System.Drawing.Font("Yu Gothic UI", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.chkLog.Location = new System.Drawing.Point(702, 38);
+            this.chkLog.Name = "chkLog";
+            this.chkLog.Size = new System.Drawing.Size(112, 29);
+            this.chkLog.TabIndex = 7;
+            this.chkLog.Text = "collect log";
+            this.chkLog.UseVisualStyleBackColor = true;
+            // 
+            // chkTable
+            // 
+            this.chkTable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkTable.AutoSize = true;
+            this.chkTable.Font = new System.Drawing.Font("Yu Gothic UI", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.chkTable.Location = new System.Drawing.Point(702, 73);
+            this.chkTable.Name = "chkTable";
+            this.chkTable.Size = new System.Drawing.Size(126, 29);
+            this.chkTable.TabIndex = 7;
+            this.chkTable.Text = "export table";
+            this.chkTable.UseVisualStyleBackColor = true;
+            // 
+            // chkDiff
+            // 
+            this.chkDiff.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkDiff.AutoSize = true;
+            this.chkDiff.Font = new System.Drawing.Font("Yu Gothic UI", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.chkDiff.Location = new System.Drawing.Point(702, 111);
+            this.chkDiff.Name = "chkDiff";
+            this.chkDiff.Size = new System.Drawing.Size(105, 29);
+            this.chkDiff.TabIndex = 7;
+            this.chkDiff.Text = "show diff";
+            this.chkDiff.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(804, 315);
+            this.ClientSize = new System.Drawing.Size(965, 484);
+            this.Controls.Add(this.chkDiff);
+            this.Controls.Add(this.chkTable);
+            this.Controls.Add(this.chkLog);
             this.Controls.Add(this.txtLocation);
             this.Controls.Add(this.btnLocation);
             this.Controls.Add(this.label2);
@@ -141,7 +183,7 @@
             this.Controls.Add(this.btnStart);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
+            this.Text = "GetEvidenceTool";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -158,5 +200,8 @@
         private FolderBrowserDialog folderBrowserDialog1;
         private Button btnLocation;
         private TextBox txtLocation;
+        private CheckBox chkLog;
+        private CheckBox chkTable;
+        private CheckBox chkDiff;
     }
 }
