@@ -1,7 +1,0 @@
-D:\CSharp\GetEvidenceTool\GetEvidenceTool\obj\Debug\net5.0-windows\GetEvidenceTool.csproj.AssemblyReference.cache
-D:\CSharp\GetEvidenceTool\GetEvidenceTool\obj\Debug\net5.0-windows\GetEvidenceTool.Form1.resources
-D:\CSharp\GetEvidenceTool\GetEvidenceTool\obj\Debug\net5.0-windows\GetEvidenceTool.csproj.GenerateResource.cache
-D:\CSharp\GetEvidenceTool\GetEvidenceTool\obj\Debug\net5.0-windows\GetEvidenceTool.GeneratedMSBuildEditorConfig.editorconfig
-D:\CSharp\GetEvidenceTool\GetEvidenceTool\obj\Debug\net5.0-windows\GetEvidenceTool.AssemblyInfoInputs.cache
-D:\CSharp\GetEvidenceTool\GetEvidenceTool\obj\Debug\net5.0-windows\GetEvidenceTool.AssemblyInfo.cs
-D:\CSharp\GetEvidenceTool\GetEvidenceTool\obj\Debug\net5.0-windows\GetEvidenceTool.csproj.CoreCompileInputs.cache
