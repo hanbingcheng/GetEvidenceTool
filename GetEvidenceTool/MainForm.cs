@@ -39,13 +39,17 @@ namespace GetEvidenceTool
             }
             Directory.CreateDirectory(rootDir);
 
-            this.beforeDir = Path.Combine(rootDir, DateTime.Now.ToString("yyyyMMddHHmmss") + "_before");
-            Directory.CreateDirectory(beforeDir);
             this.startTime = DateTime.Now.ToString(Config.Current.LogDatetimeFormat);
 
             this.console.Clear();
-            this.OutputToConsole("collect evidence on start");
-            this.ExportTables(this.beforeDir);
+
+            if (this.chkCollectBefore.Checked)
+            {
+                this.beforeDir = Path.Combine(rootDir, DateTime.Now.ToString("yyyyMMddHHmmss") + "_before");
+                Directory.CreateDirectory(beforeDir);
+                this.OutputToConsole("collect evidence on start");
+                this.ExportTables(this.beforeDir);
+            }
 
             this.btnStop.Enabled = true;
         }
@@ -54,13 +58,21 @@ namespace GetEvidenceTool
         {
             this.btnStop.Enabled = false;
 
-            this.afterDir = Path.Combine(rootDir, DateTime.Now.ToString("yyyyMMddHHmmss") + "_after");
-            Directory.CreateDirectory(this.afterDir);
+            if (this.chkCollectBefore.Checked)
+            {
+                this.afterDir = Path.Combine(rootDir, DateTime.Now.ToString("yyyyMMddHHmmss") + "_after");
+                Directory.CreateDirectory(this.afterDir);
+            }
+            else
+            {
+                this.afterDir = this.rootDir;
+            }
 
             this.OutputToConsole("collect evidence on end");
             this.ExtractLog(this.afterDir);
             this.ExportTables(this.afterDir);
-            this.RunWinMerge();
+            
+            this.RunWinMerge();           
 
             this.btnLocation.Enabled = true;
             this.txtFolderName.ReadOnly = false;
@@ -223,6 +235,7 @@ namespace GetEvidenceTool
         private void RunWinMerge()
         {
             if (!this.chkDiff.Checked ||
+                !this.chkCollectBefore.Checked ||
                 true != Config.Current.CanDiff)
             {
                 return;
@@ -279,6 +292,14 @@ namespace GetEvidenceTool
             else
             {
                 this.chkDiff.Checked = true;
+            }
+        }
+
+        private void chkCollectBefore_Click(object sender, EventArgs e)
+        {
+            if (!this.chkCollectBefore.Checked)
+            {
+                this.chkDiff.Checked = false;
             }
         }
     }

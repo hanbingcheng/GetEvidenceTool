@@ -41,6 +41,7 @@
             this.chkTable = new System.Windows.Forms.CheckBox();
             this.chkDiff = new System.Windows.Forms.CheckBox();
             this.btnConfig = new System.Windows.Forms.Button();
+            this.chkCollectBefore = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnStart
@@ -82,7 +83,7 @@
             this.txtFolderName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtFolderName.Font = new System.Drawing.Font("Yu Gothic UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtFolderName.Location = new System.Drawing.Point(263, 108);
+            this.txtFolderName.Location = new System.Drawing.Point(213, 104);
             this.txtFolderName.Name = "txtFolderName";
             this.txtFolderName.Size = new System.Drawing.Size(405, 32);
             this.txtFolderName.TabIndex = 3;
@@ -111,7 +112,7 @@
             // 
             this.btnLocation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnLocation.Font = new System.Drawing.Font("Yu Gothic UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnLocation.Location = new System.Drawing.Point(593, 51);
+            this.btnLocation.Location = new System.Drawing.Point(543, 51);
             this.btnLocation.Name = "btnLocation";
             this.btnLocation.Size = new System.Drawing.Size(75, 31);
             this.btnLocation.TabIndex = 5;
@@ -125,7 +126,7 @@
             this.txtLocation.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtLocation.Font = new System.Drawing.Font("Yu Gothic UI", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtLocation.Location = new System.Drawing.Point(32, 53);
+            this.txtLocation.Location = new System.Drawing.Point(-9, 53);
             this.txtLocation.Name = "txtLocation";
             this.txtLocation.Size = new System.Drawing.Size(546, 31);
             this.txtLocation.TabIndex = 6;
@@ -135,7 +136,7 @@
             this.chkLog.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chkLog.AutoSize = true;
             this.chkLog.Font = new System.Drawing.Font("Yu Gothic UI", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.chkLog.Location = new System.Drawing.Point(702, 38);
+            this.chkLog.Location = new System.Drawing.Point(676, 38);
             this.chkLog.Name = "chkLog";
             this.chkLog.Size = new System.Drawing.Size(112, 29);
             this.chkLog.TabIndex = 7;
@@ -147,7 +148,7 @@
             this.chkTable.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chkTable.AutoSize = true;
             this.chkTable.Font = new System.Drawing.Font("Yu Gothic UI", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.chkTable.Location = new System.Drawing.Point(702, 73);
+            this.chkTable.Location = new System.Drawing.Point(676, 73);
             this.chkTable.Name = "chkTable";
             this.chkTable.Size = new System.Drawing.Size(126, 29);
             this.chkTable.TabIndex = 7;
@@ -159,7 +160,7 @@
             this.chkDiff.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.chkDiff.AutoSize = true;
             this.chkDiff.Font = new System.Drawing.Font("Yu Gothic UI", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.chkDiff.Location = new System.Drawing.Point(702, 111);
+            this.chkDiff.Location = new System.Drawing.Point(676, 111);
             this.chkDiff.Name = "chkDiff";
             this.chkDiff.Size = new System.Drawing.Size(105, 29);
             this.chkDiff.TabIndex = 7;
@@ -178,6 +179,22 @@
             this.btnConfig.UseVisualStyleBackColor = true;
             this.btnConfig.Click += new System.EventHandler(this.btnConfig_Click);
             // 
+            // chkCollectBefore
+            // 
+            this.chkCollectBefore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkCollectBefore.AutoSize = true;
+            this.chkCollectBefore.Checked = true;
+            this.chkCollectBefore.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkCollectBefore.Font = new System.Drawing.Font("Yu Gothic UI", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.chkCollectBefore.Location = new System.Drawing.Point(676, 3);
+            this.chkCollectBefore.Name = "chkCollectBefore";
+            this.chkCollectBefore.Size = new System.Drawing.Size(138, 29);
+            this.chkCollectBefore.TabIndex = 7;
+            this.chkCollectBefore.Text = "collect before";
+            this.chkCollectBefore.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.chkCollectBefore.UseVisualStyleBackColor = true;
+            this.chkCollectBefore.Click += new System.EventHandler(this.chkCollectBefore_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -186,6 +203,7 @@
             this.Controls.Add(this.btnConfig);
             this.Controls.Add(this.chkDiff);
             this.Controls.Add(this.chkTable);
+            this.Controls.Add(this.chkCollectBefore);
             this.Controls.Add(this.chkLog);
             this.Controls.Add(this.txtLocation);
             this.Controls.Add(this.btnLocation);
@@ -219,5 +237,6 @@
         private CheckBox chkTable;
         private CheckBox chkDiff;
         private Button btnConfig;
+        private CheckBox chkCollectBefore;
     }
 }
