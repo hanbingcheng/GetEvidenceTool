@@ -222,7 +222,6 @@ namespace GetEvidenceTool
                 return;
             }
             this.dgvExportData.Rows.Add(this.txtFileName.Text, this.txtQuery.Text);
-            this.btnExportAdd.Enabled = false;
             this.txtFileName.Text = String.Empty;
             this.txtQuery.Text = String.Empty;
             this.dgvExportData.ClearSelection();
