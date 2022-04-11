@@ -40,6 +40,7 @@
             this.chkLog = new System.Windows.Forms.CheckBox();
             this.chkTable = new System.Windows.Forms.CheckBox();
             this.chkDiff = new System.Windows.Forms.CheckBox();
+            this.btnConfig = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnStart
@@ -61,7 +62,7 @@
             this.console.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.console.Location = new System.Drawing.Point(12, 157);
             this.console.Name = "console";
-            this.console.Size = new System.Drawing.Size(941, 307);
+            this.console.Size = new System.Drawing.Size(941, 282);
             this.console.TabIndex = 1;
             this.console.Text = "";
             // 
@@ -165,11 +166,24 @@
             this.chkDiff.Text = "show diff";
             this.chkDiff.UseVisualStyleBackColor = true;
             // 
+            // btnConfig
+            // 
+            this.btnConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnConfig.AutoSize = true;
+            this.btnConfig.Location = new System.Drawing.Point(875, 445);
+            this.btnConfig.Name = "btnConfig";
+            this.btnConfig.Size = new System.Drawing.Size(78, 25);
+            this.btnConfig.TabIndex = 8;
+            this.btnConfig.Text = "Configure...";
+            this.btnConfig.UseVisualStyleBackColor = true;
+            this.btnConfig.Click += new System.EventHandler(this.btnConfig_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(965, 484);
+            this.Controls.Add(this.btnConfig);
             this.Controls.Add(this.chkDiff);
             this.Controls.Add(this.chkTable);
             this.Controls.Add(this.chkLog);
@@ -184,6 +198,7 @@
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "GetEvidenceTool";
+            this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -203,5 +218,6 @@
         private CheckBox chkLog;
         private CheckBox chkTable;
         private CheckBox chkDiff;
+        private Button btnConfig;
     }
 }

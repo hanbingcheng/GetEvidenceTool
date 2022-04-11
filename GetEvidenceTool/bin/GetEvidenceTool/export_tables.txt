@@ -1,1 +1,0 @@
-﻿inquiry:select id,name,contents from test.inquiry where id >= 33790 and id <= 33795;

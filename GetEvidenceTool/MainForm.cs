@@ -7,16 +7,7 @@ namespace GetEvidenceTool
 {
     public partial class MainForm : Form
     {
-        private string datetimeFormat = "yyyy/MM/dd HH:mm:ss";
-        private string loggEncoding = string.Empty;
-        // db connection setting
-        private bool isExportTable = false;
-        private string connString = string.Empty;
-        private string nullString = string.Empty;
-        private string winmergePath = string.Empty;
-
         private string startTime = string.Empty;
-        private List<string> logs = new List<string>();
         private string location = string.Empty;
         private string folderName = string.Empty;
         private string rootDir = string.Empty;
@@ -27,82 +18,7 @@ namespace GetEvidenceTool
         {
             InitializeComponent();
 
-            this.LoadConfig();
-
-            if (this.logs.Count == 0)
-            {
-                this.chkLog.Checked = false;
-                this.chkLog.Enabled = false;
-            }
-            else
-            {
-                this.chkLog.Checked = true;
-            }
-            if (!this.isExportTable)
-            {
-                this.chkTable.Checked = false;
-                this.chkTable.Enabled = false;
-            }
-            else
-            {
-                this.chkTable.Checked = true;
-            }
-            if (string.IsNullOrEmpty(this.winmergePath))
-            {
-                this.chkDiff.Checked = false;
-                this.chkDiff.Enabled = false;
-            }
-            else
-            {
-                this.chkDiff.Checked = true;
-            }
-        }
-
-        private void LoadConfig()
-        {
-            this.datetimeFormat = ConfigurationManager.AppSettings["datetimeformat"] ?? "";
-            if (string.IsNullOrEmpty(datetimeFormat))
-            {
-                MessageBox.Show("datetimeFormat is not set on config file");
-                return;
-            }
-            string log1 = ConfigurationManager.AppSettings["log1"] ?? "";
-            if (!String.IsNullOrEmpty(log1) && File.Exists(log1))
-            {
-                this.logs.Add(log1);
-            }
-            string log2 = ConfigurationManager.AppSettings["log2"] ?? "";
-            if (!String.IsNullOrEmpty(log2) && File.Exists(log2))
-            {
-                this.logs.Add(log2);
-            }
-            string log3 = ConfigurationManager.AppSettings["log3"] ?? "";
-            if (!String.IsNullOrEmpty(log3) && File.Exists(log3))
-            {
-                this.logs.Add(log3);
-            }
-            this.loggEncoding = ConfigurationManager.AppSettings["logEncoding"] ?? "UTF-8";
-            string host = ConfigurationManager.AppSettings["host"] ?? "";
-            string port = ConfigurationManager.AppSettings["port"] ?? "";
-            string user = ConfigurationManager.AppSettings["user"] ?? "";
-            string passwd = ConfigurationManager.AppSettings["password"] ?? "";
-            string dbname = ConfigurationManager.AppSettings["dbname"] ?? "";
-            if (string.IsNullOrEmpty(host) ||
-                string.IsNullOrEmpty(port) ||
-                string.IsNullOrEmpty(user) ||
-                string.IsNullOrEmpty(passwd) ||
-                string.IsNullOrEmpty(dbname))
-            {
-                this.isExportTable = false;
-            } 
-            else
-            {
-                this.isExportTable = true;
-                this.connString = String.Format("Server={0};Port={1};User Id={2};Password={3};Database={4}", host, port, user, passwd, dbname);
-                this.nullString = ConfigurationManager.AppSettings["nullString"] ?? String.Empty;
-            }
-
-            this.winmergePath = ConfigurationManager.AppSettings["WinMerge"] ?? "";
+            Config.Current.Load();
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -125,7 +41,7 @@ namespace GetEvidenceTool
 
             this.beforeDir = Path.Combine(rootDir, DateTime.Now.ToString("yyyyMMddHHmmss") + "_before");
             Directory.CreateDirectory(beforeDir);
-            this.startTime = DateTime.Now.ToString(this.datetimeFormat);
+            this.startTime = DateTime.Now.ToString(Config.Current.LogDatetimeFormat);
 
             this.console.Clear();
             this.OutputToConsole("collect evidence on start");
@@ -142,7 +58,7 @@ namespace GetEvidenceTool
             Directory.CreateDirectory(this.afterDir);
 
             this.OutputToConsole("collect evidence on end");
-            this.CollectLog(this.afterDir);
+            this.ExtractLog(this.afterDir);
             this.ExportTables(this.afterDir);
             this.RunWinMerge();
 
@@ -191,24 +107,24 @@ namespace GetEvidenceTool
             this.console.AppendText(Environment.NewLine);
         }
 
-        private void CollectLog(string path)
+        private void ExtractLog(string path)
         {
             if (!this.chkLog.Checked)
             {
                 return;
             }
 
-            foreach (string logPath in this.logs)
+            foreach (string logPath in Config.Current.Logs)
             {
-                OutputToConsole(String.Format("collect log from: {0}", logPath));
+                OutputToConsole(String.Format("extract log from: {0}", logPath));
 
                 string filename = Path.GetFileName(logPath);
                 string outputLogPath = Path.Combine(path, filename);
                 string line = string.Empty;
                 bool find = false;
                 using (FileStream fs = new FileStream(logPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                using (StreamReader sr = new StreamReader(fs, Encoding.GetEncoding(this.loggEncoding)))
-                using (StreamWriter sw = new StreamWriter(outputLogPath, true, Encoding.GetEncoding(this.loggEncoding)))
+                using (StreamReader sr = new StreamReader(fs, Encoding.GetEncoding(Config.Current.LogEncoding)))
+                using (StreamWriter sw = new StreamWriter(outputLogPath, true, Encoding.GetEncoding(Config.Current.LogEncoding)))
                 {
                     while (-1 < sr.Peek())
                     {
@@ -234,43 +150,27 @@ namespace GetEvidenceTool
 
         private void ExportTables(string path)
         {
-            if (!this.chkTable.Checked || !this.isExportTable)
+            if (!this.chkTable.Checked || true != Config.Current.CanExportData)
             {
                 return;
             }
 
-            string exportTablesFilePath = Path.Combine(Directory.GetCurrentDirectory(), "export_tables.txt");
-            if (!File.Exists(exportTablesFilePath))
+            foreach (ExportItem item in Config.Current.exportDatas)
             {
-                MessageBox.Show("export_tables.txt is not exist on app location.");
-                return;
-            }
-
-            string line = string.Empty;
-
-            using (FileStream fs = new FileStream(exportTablesFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            using (StreamReader sr = new StreamReader(fs, Encoding.GetEncoding("UTF-8")))
-            {
-                while (-1 < sr.Peek())
+                string fileName = item.Name;
+                if (!fileName.Contains(".csv"))
                 {
-                    line = sr.ReadLine() ?? "";
-                    if (!string.IsNullOrEmpty(line))
-                    {
-                        string[] data = line.Split(":");
-                        if (data.Length == 2)
-                        {
-                            string csvPath = Path.Combine(path, data[0] + ".csv");
-                            this.OutputToConsole(String.Format("export data from table: {0} to {1}.", data[0], csvPath));
-                            this.ExportDataToCSV(csvPath, data[1]);
-                        }
-                    }
+                    fileName += ".csv";
                 }
-            }
+                string csvPath = Path.Combine(path, fileName);
+                this.OutputToConsole(String.Format("export data to {0}.", csvPath));
+                this.ExportDataToCSV(csvPath, item.Query);
+            } 
         }
 
         private void ExportDataToCSV(string filePath, string sql)
         {
-            using (var con = new NpgsqlConnection(this.connString))
+            using (var con = new NpgsqlConnection(Config.Current.ConnectionString))
             {
                 con.Open();
 
@@ -300,13 +200,13 @@ namespace GetEvidenceTool
                         {
                             if (dr[i] == DBNull.Value)
                             {
-                                builder.Append(this.nullString);
+                                builder.Append(Config.Current.NullString);
                             }
                             else
                             {
                                 builder.Append(dr[i]);
                             }
-                            builder.Append(dr[i] ?? this.nullString);
+                            builder.Append(dr[i] ?? Config.Current.NullString);
                             if (i != dr.FieldCount - 1)
                             {
                                 builder.Append(",");
@@ -323,8 +223,7 @@ namespace GetEvidenceTool
         private void RunWinMerge()
         {
             if (!this.chkDiff.Checked ||
-                string.IsNullOrEmpty(this.winmergePath) ||
-                !File.Exists(this.winmergePath))
+                true != Config.Current.CanDiff)
             {
                 return;
             }
@@ -332,11 +231,55 @@ namespace GetEvidenceTool
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.CreateNoWindow = true;
             startInfo.UseShellExecute = false;
-            startInfo.FileName = this.winmergePath;
+            startInfo.FileName = Config.Current.WinMergeUPath;
             startInfo.WindowStyle = ProcessWindowStyle.Normal;
             startInfo.Arguments = this.beforeDir + " " + this.afterDir;
 
             Process.Start(startInfo);
+        }
+
+        private void btnConfig_Click(object sender, EventArgs e)
+        {
+            SettingForm settingForm = new SettingForm();
+            settingForm.ShowDialog();
+            this.SetControlState();
+        }
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            this.SetControlState();
+        }
+
+        private void SetControlState()
+        {
+            if (!Config.Current.CanExtractLog)
+            {
+                this.chkLog.Checked = false;
+                this.chkLog.Enabled = false;
+            }
+            else
+            {
+                this.chkLog.Checked = true;
+            }
+            if (!Config.Current.CanExportData)
+            {
+                this.chkTable.Checked = false;
+                this.chkTable.Enabled = false;
+            }
+            else
+            {
+                this.chkTable.Checked = true;
+            }
+
+            if (!Config.Current.CanDiff)
+            {
+                this.chkDiff.Checked = false;
+                this.chkDiff.Enabled = false;
+            }
+            else
+            {
+                this.chkDiff.Checked = true;
+            }
         }
     }
 }
