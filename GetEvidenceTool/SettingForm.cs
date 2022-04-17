@@ -231,12 +231,12 @@ namespace GetEvidenceTool
         {
             if (string.IsNullOrEmpty(this.txtFileName.Text))
             {
-                MessageBox.Show("output csv file name is not input.");
+                MessageBox.Show("出力先のCSVファイル名を入力してください。");
                 return false;
             }
             if (string.IsNullOrEmpty(this.txtQuery.Text))
             {
-                MessageBox.Show("output csv file name is not input.");
+                MessageBox.Show("データ抽出用のSQLを入力してください。");
                 return false;
             }
             return true;

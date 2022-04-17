@@ -1,14 +1,20 @@
 # GetEvidenceTool
-* extract log between start and log form log files.
-* export table data to csv files.(currently only support postgres)
-* show diff between before and after
+エビデンス取得ツールは以下ことができる
+* 指定されたログファイルから試験開始と試験完了の間のログを抽出してエビデンスフォルダに出力する。
+* SQLクエリで出力したテーブルデータをCSVファイルにエクスポートできる（現在はPostgresのみサポート)
+* スクリーンショットまたは指定ウインドウの画面ショットを撮れてエビデンスフォルダに保存できる。
+* 試験開始時のエビデンスと試験完了時のエビデンスの差分をWinMergeで表示して差分を確認できる。
 
-## When click START
-* create before evidence folder like yyyyMMddHHmmss_before.
-* export table data to csv files.
+## 試験開始ボタン押下時
+* 試験番号のフォルダに yyyyMMddHHmmss_before のフォルダを作成する。
+* 指定されているクエリでテーブルデータをCSVにエクスポートする。
+* 撮った画面ショットを保存する。
 
-## when click STOP
-* create after evidence folder like yyyyMMddHHmmss_after.
-* export table data to csv files.
-* extract logs from log files between start and stop.
-* show diff beween yyyyMMddHHmmss_before and yyyyMMddHHmmss_after.
+## 試験終了ボタン押下時
+* 試験番号のフォルダに yyyyMMddHHmmss_afterのフォルダを作成する。
+* 指定されたログファイルから試験開始と試験完了の間のログを抽出して同名のログファイルに出力する。
+* 指定されているクエリでテーブルデータをCSVにエクスポートする。
+* 撮った画面ショットを保存する。
+* yyyyMMddHHmmss_before and yyyyMMddHHmmss_after フォルダの差分を表示する。
+* 試験開始時エビデンスを取得しないように設定されている場合は、
+yyyyMMddHHmmss_before and yyyyMMddHHmmss_after のフォルダを作成せず、すべてのエビデンスを試験番号のフォルダに出力する。

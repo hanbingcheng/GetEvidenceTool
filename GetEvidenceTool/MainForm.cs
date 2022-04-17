@@ -1,6 +1,7 @@
 using Npgsql;
 using System.Configuration;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace GetEvidenceTool
@@ -13,12 +14,58 @@ namespace GetEvidenceTool
         private string rootDir = string.Empty;
         private string beforeDir = string.Empty;
         private string afterDir = string.Empty;
+        private List<Bitmap> captures = new List<Bitmap>();
+        private int width = 100;
+        private int height = 80;
+
 
         public MainForm()
         {
             InitializeComponent();
 
             Config.Current.Load();
+
+            this.imageListCaptures.ImageSize = new Size(width, height);
+        }
+
+        private void MainForm_Shown(object sender, EventArgs e)
+        {
+            this.SetControlState();
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            this.comboWindowTitle.DisplayMember = "Title";
+            this.comboWindowTitle.ValueMember = "Process";
+            this.comboWindowTitle.Items.Clear();
+            foreach (Process p in System.Diagnostics.Process.GetProcesses())
+            {
+                //メインウィンドウのタイトルがある時だけ列挙する
+                if (p.MainWindowTitle.Length != 0)
+                {
+                    this.comboWindowTitle.Items.Add(new WindowInfo(p.MainWindowTitle, p));
+                }
+            }
+        }
+
+        private void btnConfig_Click(object sender, EventArgs e)
+        {
+            SettingForm settingForm = new SettingForm();
+            settingForm.ShowDialog();
+            this.SetControlState();
+        }
+
+        private void btnLocation_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.Description = "select folder to output evidences";
+            fbd.ShowNewFolderButton = true;
+            DialogResult dr = fbd.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                location = fbd.SelectedPath;
+                this.txtLocation.Text = location;
+            }
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -27,18 +74,28 @@ namespace GetEvidenceTool
             {
                 return;
             }
+            
+            this.rootDir = Path.Combine(location, folderName);
+            if (Directory.Exists(rootDir))
+            {
+                DialogResult result = MessageBox.Show("指定試験番号のフォルダが既に存在しています。上書きしますか？",
+                    "確認",
+                    MessageBoxButtons.OKCancel,
+                    MessageBoxIcon.Question);
+                if (DialogResult.OK == result)
+                {
+                    Directory.Delete(rootDir, true);
+                } else
+                {
+                    return;
+                }                
+            }
 
             this.btnStart.Enabled = false;
             this.btnLocation.Enabled = false;
             this.txtFolderName.ReadOnly = true;
 
-            this.rootDir = Path.Combine(location, folderName);
-            if (Directory.Exists(rootDir))
-            {
-                Directory.Delete(rootDir, true);
-            }
             Directory.CreateDirectory(rootDir);
-
             this.startTime = DateTime.Now.ToString(Config.Current.LogDatetimeFormat);
 
             this.console.Clear();
@@ -49,8 +106,9 @@ namespace GetEvidenceTool
                 Directory.CreateDirectory(beforeDir);
                 this.OutputToConsole("collect evidence on start");
                 this.ExportTables(this.beforeDir);
+                this.SaveCaptures(this.beforeDir);
+               
             }
-
             this.btnStop.Enabled = true;
         }
 
@@ -71,7 +129,7 @@ namespace GetEvidenceTool
             this.OutputToConsole("collect evidence on end");
             this.ExtractLog(this.afterDir);
             this.ExportTables(this.afterDir);
-            
+            this.SaveCaptures(this.afterDir);
             this.RunWinMerge();           
 
             this.btnLocation.Enabled = true;
@@ -79,30 +137,122 @@ namespace GetEvidenceTool
             this.btnStart.Enabled = true;
         }
 
-        private void btnLocation_Click(object sender, EventArgs e)
+        private void chkCollectBefore_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.Description = "select folder to output evidences";
-            fbd.ShowNewFolderButton = true;
-            DialogResult dr = fbd.ShowDialog();
-            if (dr == DialogResult.OK)
+            this.btnCaptureSceen.Enabled = true;
+            this.btnCaptureWindow_Click(this.btnCaptureWindow, new EventArgs());
+            if (!this.chkCollectBefore.Checked)
             {
-                location = fbd.SelectedPath;
-                this.txtLocation.Text = location;
+                if (this.btnStart.Enabled)
+                {
+                    this.btnCaptureSceen.Enabled = false;
+                    this.btnCaptureWindow.Enabled = false;
+                }
+
             }
+            if (this.chkCollectBefore.Checked)
+            {
+                this.chkDiff.Enabled = true;            }else
+            {
+                this.chkDiff.Enabled = false;
+                this.chkDiff.Checked = false;
+
+            }
+        }
+
+        private void btnCaptureSceen_Click(object sender, EventArgs e)
+        {
+            this.ScreenCapture(true);
+
+        }
+
+        private void btnCaptureWindow_Click(object sender, EventArgs e)
+        {
+            this.ScreenCapture(false);
+            
+        }
+
+        private void ScreenCapture(bool isCaptureScrenn)
+        {
+
+            Clipboard.Clear();
+
+            if (isCaptureScrenn)
+            {
+                this.OutputToConsole("スクリーンショットを取りました.");
+                SendKeys.SendWait("{PRTSC}");
+            }
+            else {
+                WindowInfo? info = this.comboWindowTitle.SelectedItem as WindowInfo;
+                if (null == info)
+                {
+                    return;
+                }
+                this.OutputToConsole("" + info.Title + "の画面ショットを取りました。");
+                Win32.SetForegroundWindow(info.Process.MainWindowHandle);
+                Application.DoEvents();
+                // ALT + PrintScreen
+                SendKeys.SendWait("%{PRTSC}");
+
+            }
+            Bitmap? bitmap = this.GetScreenImage();
+            if (bitmap != null)
+            {
+                this.captures.Add(bitmap);
+                Image thumbnail = this.CreateThumbnail(bitmap,width,height);
+                this.imageListCaptures.Images.Add(thumbnail);
+                int index = this.captures.Count - 1;
+                this.listViewCaptures.Items.Add((index + 1).ToString("D3"), index);
+                if (0 == this.splitContainer1.SplitterDistance)
+                {
+                    this.splitContainer1.SplitterDistance = 110;
+                }
+            }
+                        Win32.SetForegroundWindow(this.Handle);
+        }
+
+        private Bitmap? GetScreenImage()
+        {
+            IDataObject data = Clipboard.GetDataObject();
+            Bitmap? bmp = null;
+            if (data.GetDataPresent(DataFormats.Bitmap))
+            {
+                bmp = (Bitmap)data.GetData(DataFormats.Bitmap);
+            }
+            return bmp;
+        }
+
+        private void comboWindowTitle_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (-1 < this.comboWindowTitle.SelectedIndex)
+            {
+                this.btnCaptureWindow.Enabled = true;
+            }
+            else
+            {
+                this.btnCaptureWindow.Enabled = false;
+            }
+        }
+
+        private void listViewCaptures_DoubleClick(object sender, EventArgs e)
+        {
+            int index = this.listViewCaptures.SelectedIndices[0];
+            Image image = this.captures[index];
+            ImageViewerForm frm = new ImageViewerForm(image);
+            frm.ShowDialog();
         }
 
         private bool IsReady()
         {
             if (string.IsNullOrEmpty(location))
             {
-                MessageBox.Show("evidence location is not set.");
+                MessageBox.Show("エビデンスの格納先を指定してください。");
                 return false;
             }
             string folderName = this.txtFolderName.Text;
             if (string.IsNullOrEmpty(folderName))
             {
-                MessageBox.Show("folder name is not set");
+                MessageBox.Show("試験番号／エビデンスフォルダ名を指定してください。");
                 return false;
             }
             if (0 <= folderName.IndexOfAny(Path.GetInvalidPathChars()))
@@ -180,6 +330,18 @@ namespace GetEvidenceTool
             } 
         }
 
+        private void SaveCaptures(string path)
+        {
+            for (int i = 0; i < this.captures.Count; i++)
+            {
+                Bitmap bmp = this.captures[i];
+                bmp.Save(Path.Combine(path, (i + 1).ToString("D3") + ".bmp"));
+            }
+            this.captures.Clear();
+            this.listViewCaptures.Items.Clear();
+            this.imageListCaptures.Images.Clear();
+        }
+
         private void ExportDataToCSV(string filePath, string sql)
         {
             using (var con = new NpgsqlConnection(Config.Current.ConnectionString))
@@ -251,18 +413,6 @@ namespace GetEvidenceTool
             Process.Start(startInfo);
         }
 
-        private void btnConfig_Click(object sender, EventArgs e)
-        {
-            SettingForm settingForm = new SettingForm();
-            settingForm.ShowDialog();
-            this.SetControlState();
-        }
-
-        private void MainForm_Shown(object sender, EventArgs e)
-        {
-            this.SetControlState();
-        }
-
         private void SetControlState()
         {
             if (!Config.Current.CanExtractLog)
@@ -293,14 +443,43 @@ namespace GetEvidenceTool
             {
                 this.chkDiff.Checked = true;
             }
+            this.btnCaptureWindow.Enabled = false;
+            this.splitContainer1.SplitterDistance = 0;
+
         }
 
-        private void chkCollectBefore_Click(object sender, EventArgs e)
+        Image CreateThumbnail(Image image, int w, int h)
         {
-            if (!this.chkCollectBefore.Checked)
-            {
-                this.chkDiff.Checked = false;
-            }
+            Bitmap canvas = new Bitmap(w, h);
+
+            Graphics g = Graphics.FromImage(canvas);
+            g.FillRectangle(new SolidBrush(Color.White), 0, 0, w, h);
+
+            float fw = (float)w / (float)image.Width;
+            float fh = (float)h / (float)image.Height;
+
+            float scale = Math.Min(fw, fh);
+            fw = image.Width * scale;
+            fh = image.Height * scale;
+
+            g.DrawImage(image, (w - fw) / 2, (h - fh) / 2, fw, fh);
+            g.Dispose();
+
+            return canvas;
+        }
+
+    }
+
+    public class WindowInfo
+    {
+        public string Title { get; private set; } = string.Empty;
+        public Process Process { get; private set; }
+
+        public WindowInfo(string title, Process process)
+        {
+            this.Title = title;
+            this.Process = process;
+
         }
     }
 }

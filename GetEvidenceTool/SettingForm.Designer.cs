@@ -119,19 +119,19 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(1210, 528);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Extract Log";
+            this.tabPage1.Text = "ログ";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // txtLogEncoding
             // 
-            this.txtLogEncoding.Location = new System.Drawing.Point(629, 49);
+            this.txtLogEncoding.Location = new System.Drawing.Point(653, 44);
             this.txtLogEncoding.Name = "txtLogEncoding";
             this.txtLogEncoding.Size = new System.Drawing.Size(129, 31);
             this.txtLogEncoding.TabIndex = 10;
             // 
             // txtLogDatetimeFormat
             // 
-            this.txtLogDatetimeFormat.Location = new System.Drawing.Point(236, 48);
+            this.txtLogDatetimeFormat.Location = new System.Drawing.Point(244, 49);
             this.txtLogDatetimeFormat.Name = "txtLogDatetimeFormat";
             this.txtLogDatetimeFormat.Size = new System.Drawing.Size(208, 31);
             this.txtLogDatetimeFormat.TabIndex = 10;
@@ -162,9 +162,9 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(477, 47);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(146, 25);
+            this.label7.Size = new System.Drawing.Size(170, 25);
             this.label7.TabIndex = 6;
-            this.label7.Text = "log file encoding";
+            this.label7.Text = "ログファイルのエンコード";
             this.label7.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // label5
@@ -172,9 +172,9 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(6, 6);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(481, 25);
+            this.label5.Size = new System.Drawing.Size(535, 25);
             this.label5.TabIndex = 6;
-            this.label5.Text = "extract logs from specified log files betwwen start and end.";
+            this.label5.Text = "指定されているログファイルから試験開始と試験終了の間のログを収集する";
             this.label5.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // label6
@@ -182,9 +182,9 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(5, 52);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(225, 25);
+            this.label6.Size = new System.Drawing.Size(233, 25);
             this.label6.TabIndex = 6;
-            this.label6.Text = "date time format in log file";
+            this.label6.Text = "ログファイル内の日時フォーマット";
             this.label6.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // label2
@@ -192,9 +192,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(10, 293);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(158, 25);
+            this.label2.Size = new System.Drawing.Size(169, 25);
             this.label2.TabIndex = 6;
-            this.label2.Text = "set path of log file";
+            this.label2.Text = "ログファイルを指定する";
             this.label2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // btnLogAdd
@@ -204,7 +204,7 @@
             this.btnLogAdd.Name = "btnLogAdd";
             this.btnLogAdd.Size = new System.Drawing.Size(91, 33);
             this.btnLogAdd.TabIndex = 3;
-            this.btnLogAdd.Text = "ADD";
+            this.btnLogAdd.Text = "追加";
             this.btnLogAdd.UseVisualStyleBackColor = true;
             this.btnLogAdd.Click += new System.EventHandler(this.btnLogAdd_Click);
             // 
@@ -215,7 +215,7 @@
             this.btnLogUpdate.Name = "btnLogUpdate";
             this.btnLogUpdate.Size = new System.Drawing.Size(91, 33);
             this.btnLogUpdate.TabIndex = 4;
-            this.btnLogUpdate.Text = "UPDATE";
+            this.btnLogUpdate.Text = "更新";
             this.btnLogUpdate.UseVisualStyleBackColor = true;
             this.btnLogUpdate.Click += new System.EventHandler(this.btnLogUpdate_Click);
             // 
@@ -226,7 +226,7 @@
             this.btnLogDelete.Name = "btnLogDelete";
             this.btnLogDelete.Size = new System.Drawing.Size(91, 33);
             this.btnLogDelete.TabIndex = 5;
-            this.btnLogDelete.Text = "DELETE";
+            this.btnLogDelete.Text = "削除";
             this.btnLogDelete.UseVisualStyleBackColor = true;
             this.btnLogDelete.Click += new System.EventHandler(this.btnLogDelete_Click);
             // 
@@ -237,7 +237,7 @@
             this.btnLogClear.Name = "btnLogClear";
             this.btnLogClear.Size = new System.Drawing.Size(91, 33);
             this.btnLogClear.TabIndex = 5;
-            this.btnLogClear.Text = "CLEAR";
+            this.btnLogClear.Text = "クリア";
             this.btnLogClear.UseVisualStyleBackColor = true;
             this.btnLogClear.Click += new System.EventHandler(this.btnLogClear_Click);
             // 
@@ -275,7 +275,7 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(1210, 528);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Export Table Data";
+            this.tabPage2.Text = "テーブルデータエクスポート";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // groupBox2
@@ -295,7 +295,7 @@
             this.groupBox2.Size = new System.Drawing.Size(923, 117);
             this.groupBox2.TabIndex = 12;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "database connection settings(only support postgres)";
+            this.groupBox2.Text = "データベース接続設定（Postgres)";
             // 
             // txtDBName
             // 
@@ -398,7 +398,7 @@
             this.groupBox1.Size = new System.Drawing.Size(1158, 337);
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "using query to export data to csv files";
+            this.groupBox1.Text = "エクスポート対象データ取得SQLとCSVファイル名の指定";
             // 
             // dgvExportData
             // 
@@ -430,9 +430,9 @@
             // 
             this.txtFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtFileName.Location = new System.Drawing.Point(180, 187);
+            this.txtFileName.Location = new System.Drawing.Point(183, 185);
             this.txtFileName.Name = "txtFileName";
-            this.txtFileName.Size = new System.Drawing.Size(866, 31);
+            this.txtFileName.Size = new System.Drawing.Size(417, 31);
             this.txtFileName.TabIndex = 9;
             // 
             // btnExportClear
@@ -442,7 +442,7 @@
             this.btnExportClear.Name = "btnExportClear";
             this.btnExportClear.Size = new System.Drawing.Size(91, 33);
             this.btnExportClear.TabIndex = 1;
-            this.btnExportClear.Text = "CLEAR";
+            this.btnExportClear.Text = "クリア";
             this.btnExportClear.UseVisualStyleBackColor = true;
             this.btnExportClear.Click += new System.EventHandler(this.btnExportDataClear_Click);
             // 
@@ -453,7 +453,7 @@
             this.btnExportDelete.Name = "btnExportDelete";
             this.btnExportDelete.Size = new System.Drawing.Size(91, 33);
             this.btnExportDelete.TabIndex = 1;
-            this.btnExportDelete.Text = "DELETE";
+            this.btnExportDelete.Text = "削除";
             this.btnExportDelete.UseVisualStyleBackColor = true;
             this.btnExportDelete.Click += new System.EventHandler(this.btnExportDelete_Click);
             // 
@@ -462,9 +462,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(15, 236);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(162, 25);
+            this.label4.Size = new System.Drawing.Size(120, 25);
             this.label4.TabIndex = 8;
-            this.label4.Text = "SQL for query data";
+            this.label4.Text = "データ取得SQL";
             this.label4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // btnExportAdd
@@ -474,18 +474,18 @@
             this.btnExportAdd.Name = "btnExportAdd";
             this.btnExportAdd.Size = new System.Drawing.Size(91, 33);
             this.btnExportAdd.TabIndex = 1;
-            this.btnExportAdd.Text = "ADD";
+            this.btnExportAdd.Text = "追加";
             this.btnExportAdd.UseVisualStyleBackColor = true;
             this.btnExportAdd.Click += new System.EventHandler(this.btnExportAdd_Click);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(59, 193);
+            this.label3.Location = new System.Drawing.Point(15, 194);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(115, 25);
+            this.label3.Size = new System.Drawing.Size(149, 25);
             this.label3.TabIndex = 8;
-            this.label3.Text = "csv file name";
+            this.label3.Text = "出力CSVファイル名";
             this.label3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // btnExportUpdate
@@ -495,7 +495,7 @@
             this.btnExportUpdate.Name = "btnExportUpdate";
             this.btnExportUpdate.Size = new System.Drawing.Size(91, 33);
             this.btnExportUpdate.TabIndex = 1;
-            this.btnExportUpdate.Text = "UPDATE";
+            this.btnExportUpdate.Text = "更新";
             this.btnExportUpdate.UseVisualStyleBackColor = true;
             this.btnExportUpdate.Click += new System.EventHandler(this.btnExportUpdate_Click);
             // 
@@ -510,7 +510,7 @@
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage3.Size = new System.Drawing.Size(1210, 528);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Diff";
+            this.tabPage3.Text = "差分";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // btnSelectWinMerge
@@ -539,9 +539,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(27, 29);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(197, 21);
+            this.label1.Size = new System.Drawing.Size(227, 21);
             this.label1.TabIndex = 0;
-            this.label1.Text = "set path of WinMergeU.exe";
+            this.label1.Text = "WinMergeU.exeのパスを指定する";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // btnSave
@@ -553,7 +553,7 @@
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 35);
             this.btnSave.TabIndex = 1;
-            this.btnSave.Text = "Save";
+            this.btnSave.Text = "保存";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
@@ -562,25 +562,25 @@
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.AutoSize = true;
             this.btnCancel.Font = new System.Drawing.Font("Yu Gothic UI", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnCancel.Location = new System.Drawing.Point(1052, 569);
+            this.btnCancel.Location = new System.Drawing.Point(1044, 569);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 35);
+            this.btnCancel.Size = new System.Drawing.Size(83, 35);
             this.btnCancel.TabIndex = 1;
-            this.btnCancel.Text = "Cancel";
+            this.btnCancel.Text = "kyンセル";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // fileName
             // 
             this.fileName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.fileName.HeaderText = "CSV file name";
+            this.fileName.HeaderText = "CSVファイル名";
             this.fileName.Name = "fileName";
-            this.fileName.Width = 145;
+            this.fileName.Width = 136;
             // 
             // query
             // 
             this.query.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.query.HeaderText = "sql query";
+            this.query.HeaderText = "SQL";
             this.query.Name = "query";
             // 
             // SettingForm
