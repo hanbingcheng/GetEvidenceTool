@@ -1,6 +1,6 @@
 ﻿namespace GetEvidenceTool
 {
-    partial class MainForm
+    partial class FrmMain
     {
         /// <summary>
         ///  Required designer variable.
@@ -51,6 +51,8 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.label3 = new System.Windows.Forms.Label();
+            this.btnActiveWindowCapture = new System.Windows.Forms.Button();
+            this.btnAreaCapture = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -60,7 +62,7 @@
             // btnStart
             // 
             this.btnStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnStart.Location = new System.Drawing.Point(803, 12);
+            this.btnStart.Location = new System.Drawing.Point(833, 12);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(109, 55);
             this.btnStart.TabIndex = 0;
@@ -74,14 +76,15 @@
             this.console.Dock = System.Windows.Forms.DockStyle.Fill;
             this.console.Location = new System.Drawing.Point(0, 0);
             this.console.Name = "console";
-            this.console.Size = new System.Drawing.Size(891, 184);
+            this.console.ReadOnly = true;
+            this.console.Size = new System.Drawing.Size(921, 184);
             this.console.TabIndex = 1;
             this.console.Text = "";
             // 
             // btnStop
             // 
             this.btnStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnStop.Location = new System.Drawing.Point(803, 88);
+            this.btnStop.Location = new System.Drawing.Point(833, 88);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(109, 52);
             this.btnStop.TabIndex = 2;
@@ -93,7 +96,7 @@
             // 
             this.txtFolderName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txtFolderName.Font = new System.Drawing.Font("MS UI Gothic", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtFolderName.Location = new System.Drawing.Point(494, 79);
+            this.txtFolderName.Location = new System.Drawing.Point(524, 79);
             this.txtFolderName.Name = "txtFolderName";
             this.txtFolderName.Size = new System.Drawing.Size(191, 22);
             this.txtFolderName.TabIndex = 3;
@@ -103,7 +106,7 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("MS UI Gothic", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(413, 86);
+            this.label1.Location = new System.Drawing.Point(443, 86);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(67, 15);
             this.label1.TabIndex = 4;
@@ -123,7 +126,7 @@
             // 
             this.btnLocation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnLocation.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnLocation.Location = new System.Drawing.Point(350, 83);
+            this.btnLocation.Location = new System.Drawing.Point(380, 83);
             this.btnLocation.Name = "btnLocation";
             this.btnLocation.Size = new System.Drawing.Size(49, 21);
             this.btnLocation.TabIndex = 5;
@@ -141,7 +144,7 @@
             this.txtLocation.Location = new System.Drawing.Point(111, 86);
             this.txtLocation.Name = "txtLocation";
             this.txtLocation.ReadOnly = true;
-            this.txtLocation.Size = new System.Drawing.Size(233, 22);
+            this.txtLocation.Size = new System.Drawing.Size(263, 22);
             this.txtLocation.TabIndex = 6;
             // 
             // chkLog
@@ -181,7 +184,7 @@
             // 
             this.btnConfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnConfig.AutoSize = true;
-            this.btnConfig.Location = new System.Drawing.Point(21, 7);
+            this.btnConfig.Location = new System.Drawing.Point(51, 7);
             this.btnConfig.Name = "btnConfig";
             this.btnConfig.Size = new System.Drawing.Size(78, 25);
             this.btnConfig.TabIndex = 8;
@@ -196,7 +199,7 @@
             this.chkCollectBefore.Checked = true;
             this.chkCollectBefore.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkCollectBefore.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.chkCollectBefore.Location = new System.Drawing.Point(21, 38);
+            this.chkCollectBefore.Location = new System.Drawing.Point(51, 38);
             this.chkCollectBefore.Name = "chkCollectBefore";
             this.chkCollectBefore.Size = new System.Drawing.Size(200, 24);
             this.chkCollectBefore.TabIndex = 7;
@@ -207,17 +210,17 @@
             // 
             // btnCaptureSceen
             // 
-            this.btnCaptureSceen.Location = new System.Drawing.Point(577, 115);
+            this.btnCaptureSceen.Location = new System.Drawing.Point(578, 115);
             this.btnCaptureSceen.Name = "btnCaptureSceen";
             this.btnCaptureSceen.Size = new System.Drawing.Size(108, 54);
             this.btnCaptureSceen.TabIndex = 9;
-            this.btnCaptureSceen.Text = "スクリーンショット";
+            this.btnCaptureSceen.Text = "スクリーンショット(PrintScreen)";
             this.btnCaptureSceen.UseVisualStyleBackColor = true;
             this.btnCaptureSceen.Click += new System.EventHandler(this.btnCaptureSceen_Click);
             // 
             // btnCaptureWindow
             // 
-            this.btnCaptureWindow.Location = new System.Drawing.Point(455, 115);
+            this.btnCaptureWindow.Location = new System.Drawing.Point(305, 114);
             this.btnCaptureWindow.Name = "btnCaptureWindow";
             this.btnCaptureWindow.Size = new System.Drawing.Size(108, 54);
             this.btnCaptureWindow.TabIndex = 9;
@@ -230,9 +233,9 @@
             this.comboWindowTitle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboWindowTitle.Font = new System.Drawing.Font("Yu Gothic UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.comboWindowTitle.FormattingEnabled = true;
-            this.comboWindowTitle.Location = new System.Drawing.Point(13, 133);
+            this.comboWindowTitle.Location = new System.Drawing.Point(13, 128);
             this.comboWindowTitle.Name = "comboWindowTitle";
-            this.comboWindowTitle.Size = new System.Drawing.Size(436, 28);
+            this.comboWindowTitle.Size = new System.Drawing.Size(275, 28);
             this.comboWindowTitle.TabIndex = 10;
             this.comboWindowTitle.SelectedIndexChanged += new System.EventHandler(this.comboWindowTitle_SelectedIndexChanged);
             // 
@@ -242,7 +245,7 @@
             this.listViewCaptures.LargeImageList = this.imageListCaptures;
             this.listViewCaptures.Location = new System.Drawing.Point(0, 0);
             this.listViewCaptures.Name = "listViewCaptures";
-            this.listViewCaptures.Size = new System.Drawing.Size(891, 111);
+            this.listViewCaptures.Size = new System.Drawing.Size(921, 111);
             this.listViewCaptures.TabIndex = 11;
             this.listViewCaptures.UseCompatibleStateImageBehavior = false;
             this.listViewCaptures.DoubleClick += new System.EventHandler(this.listViewCaptures_DoubleClick);
@@ -265,7 +268,7 @@
             this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(21, 181);
+            this.splitContainer1.Location = new System.Drawing.Point(13, 185);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -277,7 +280,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.console);
-            this.splitContainer1.Size = new System.Drawing.Size(891, 296);
+            this.splitContainer1.Size = new System.Drawing.Size(921, 296);
             this.splitContainer1.SplitterDistance = 111;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 13;
@@ -291,16 +294,38 @@
             this.label3.TabIndex = 14;
             this.label3.Text = "@Author by hanbing.cheng Version: v2.0";
             // 
+            // btnActiveWindowCapture
+            // 
+            this.btnActiveWindowCapture.Location = new System.Drawing.Point(419, 114);
+            this.btnActiveWindowCapture.Name = "btnActiveWindowCapture";
+            this.btnActiveWindowCapture.Size = new System.Drawing.Size(153, 54);
+            this.btnActiveWindowCapture.TabIndex = 9;
+            this.btnActiveWindowCapture.Text = "アクティブウインドウショット(ALT+PrintScreen)";
+            this.btnActiveWindowCapture.UseVisualStyleBackColor = true;
+            this.btnActiveWindowCapture.Click += new System.EventHandler(this.btnActiveWindowCapture_Click);
+            // 
+            // btnAreaCapture
+            // 
+            this.btnAreaCapture.Location = new System.Drawing.Point(692, 115);
+            this.btnAreaCapture.Name = "btnAreaCapture";
+            this.btnAreaCapture.Size = new System.Drawing.Size(77, 54);
+            this.btnAreaCapture.TabIndex = 9;
+            this.btnAreaCapture.Text = "範囲指定";
+            this.btnAreaCapture.UseVisualStyleBackColor = true;
+            this.btnAreaCapture.Click += new System.EventHandler(this.btnAreaCapture_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(935, 508);
+            this.ClientSize = new System.Drawing.Size(965, 508);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.comboWindowTitle);
             this.Controls.Add(this.btnCaptureWindow);
+            this.Controls.Add(this.btnAreaCapture);
+            this.Controls.Add(this.btnActiveWindowCapture);
             this.Controls.Add(this.btnCaptureSceen);
             this.Controls.Add(this.btnConfig);
             this.Controls.Add(this.chkDiff);
@@ -352,5 +377,7 @@
         private Panel panel1;
         private SplitContainer splitContainer1;
         private Label label3;
+        private Button btnActiveWindowCapture;
+        private Button btnAreaCapture;
     }
 }

@@ -3,10 +3,11 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Forms;
 
 namespace GetEvidenceTool
 {
-    public partial class MainForm : Form
+    public partial class FrmMain : Form
     {
         private string startTime = string.Empty;
         private string location = string.Empty;
@@ -17,9 +18,11 @@ namespace GetEvidenceTool
         private List<Bitmap> captures = new List<Bitmap>();
         private int width = 100;
         private int height = 80;
+        private KeyboardHook keyboardHook = new KeyboardHook();
+        private bool isCaptreFromButton = false;
 
 
-        public MainForm()
+        public FrmMain()
         {
             InitializeComponent();
 
@@ -35,6 +38,9 @@ namespace GetEvidenceTool
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            keyboardHook.KeyDownEvent += KeyboardHook_KeyDownEvent;
+            keyboardHook.Hook();
+
             this.comboWindowTitle.DisplayMember = "Title";
             this.comboWindowTitle.ValueMember = "Process";
             this.comboWindowTitle.Items.Clear();
@@ -48,9 +54,14 @@ namespace GetEvidenceTool
             }
         }
 
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            keyboardHook.UnHook();
+        }
+
         private void btnConfig_Click(object sender, EventArgs e)
         {
-            SettingForm settingForm = new SettingForm();
+            FrmSetting settingForm = new FrmSetting();
             settingForm.ShowDialog();
             this.SetControlState();
         }
@@ -160,58 +171,101 @@ namespace GetEvidenceTool
             }
         }
 
+        #region capture
         private void btnCaptureSceen_Click(object sender, EventArgs e)
         {
-            this.ScreenCapture(true);
-
+            this.isCaptreFromButton = true;
+            Clipboard.Clear();
+            this.Hide();
+            SendKeys.SendWait("{PRTSC}");
+            if(this.GetCapturemage())
+            {
+                this.OutputToConsole("スクリーンショットを取りました.");
+            }
+            
+            Win32.SetForegroundWindow(this.Handle);
+            this.Show();
+            this.isCaptreFromButton = false;
         }
 
         private void btnCaptureWindow_Click(object sender, EventArgs e)
         {
-            this.ScreenCapture(false);
-            
+            this.isCaptreFromButton = true;
+            Clipboard.Clear();
+            WindowInfo? info = this.comboWindowTitle.SelectedItem as WindowInfo;
+            if (null == info)
+            {
+                return;
+            }            
+            Win32.SetForegroundWindow(info.Process.MainWindowHandle);
+            Application.DoEvents();
+            // ALT + PrintScreen
+            SendKeys.SendWait("%{PRTSC}");
+            if (this.GetCapturemage())
+            {
+                this.OutputToConsole(info.Title + "の画面ショットを取りました。");
+            }
+
+            Win32.SetForegroundWindow(this.Handle);
+            this.isCaptreFromButton = false;
         }
 
-        private void ScreenCapture(bool isCaptureScrenn)
-        {
-
+        private void btnActiveWindowCapture_Click(object sender, EventArgs e)
+        {            
+            this.isCaptreFromButton = true;
             Clipboard.Clear();
-
-            if (isCaptureScrenn)
+            this.Hide();
+            // ALT + PrintScreen
+            SendKeys.SendWait("%{PRTSC}");
+            string title = Win32.GetActiveWindowTitle();
+            if (this.GetCapturemage())
             {
-                this.OutputToConsole("スクリーンショットを取りました.");
-                SendKeys.SendWait("{PRTSC}");
+                this.OutputToConsole(title + "の画面ショットを取りました。");
             }
-            else {
-                WindowInfo? info = this.comboWindowTitle.SelectedItem as WindowInfo;
-                if (null == info)
+            this.Show();
+            Win32.SetForegroundWindow(this.Handle);
+            this.isCaptreFromButton = false;
+        }
+
+        private void btnAreaCapture_Click(object sender, EventArgs e)
+        {
+            FrmCapture frm = new FrmCapture();
+            frm.Owner = this;
+            frm.ShowDialog();
+            if (this.GetCapturemage())
+            {
+                this.OutputToConsole("指定領域のキャプチャを取りました。");
+            }
+
+        }
+
+        private void KeyboardHook_KeyDownEvent(object sender, LowLevelKeyEventArgs e)
+        {
+            if (e.Code == (int)Keys.PrintScreen)
+            {
+                if (!this.btnStart.Enabled || this.isCaptreFromButton)
                 {
                     return;
                 }
-                this.OutputToConsole("" + info.Title + "の画面ショットを取りました。");
-                Win32.SetForegroundWindow(info.Process.MainWindowHandle);
-                Application.DoEvents();
-                // ALT + PrintScreen
-                SendKeys.SendWait("%{PRTSC}");
-
-            }
-            Bitmap? bitmap = this.GetScreenImage();
-            if (bitmap != null)
-            {
-                this.captures.Add(bitmap);
-                Image thumbnail = this.CreateThumbnail(bitmap,width,height);
-                this.imageListCaptures.Images.Add(thumbnail);
-                int index = this.captures.Count - 1;
-                this.listViewCaptures.Items.Add((index + 1).ToString("D3"), index);
-                if (0 == this.splitContainer1.SplitterDistance)
+                if (Control.ModifierKeys == Keys.Alt)
                 {
-                    this.splitContainer1.SplitterDistance = 110;
+                    string title = Win32.GetActiveWindowTitle();
+                    if (this.GetCapturemage())
+                    {
+                        this.OutputToConsole(title + "の画面ショットを取りました。");
+                    }
+                }
+                else
+                {
+                    if (this.GetCapturemage())
+                    {
+                        this.OutputToConsole("スクリーンショットを取りました.");
+                    }                    
                 }
             }
-                        Win32.SetForegroundWindow(this.Handle);
         }
 
-        private Bitmap? GetScreenImage()
+        private bool GetCapturemage()
         {
             IDataObject data = Clipboard.GetDataObject();
             Bitmap? bmp = null;
@@ -219,7 +273,23 @@ namespace GetEvidenceTool
             {
                 bmp = (Bitmap)data.GetData(DataFormats.Bitmap);
             }
-            return bmp;
+            if (bmp != null)
+            {
+                this.captures.Add(bmp);
+                Image thumbnail = this.CreateThumbnail(bmp, width, height);
+                this.imageListCaptures.Images.Add(thumbnail);
+                int index = this.captures.Count - 1;
+                this.listViewCaptures.Items.Add((index + 1).ToString("D3"), index);
+                if (0 == this.splitContainer1.SplitterDistance)
+                {
+                    this.splitContainer1.SplitterDistance = 110;
+                }
+                return true;
+            } else
+            {
+                this.OutputToConsole("画面ショットの取得に失敗しました。");
+                return false;
+            }
         }
 
         private void comboWindowTitle_SelectedIndexChanged(object sender, EventArgs e)
@@ -238,9 +308,10 @@ namespace GetEvidenceTool
         {
             int index = this.listViewCaptures.SelectedIndices[0];
             Image image = this.captures[index];
-            ImageViewerForm frm = new ImageViewerForm(image);
+            FrmImageViewer frm = new FrmImageViewer(image);
             frm.ShowDialog();
         }
+        #endregion capture
 
         private bool IsReady()
         {
@@ -265,7 +336,7 @@ namespace GetEvidenceTool
 
         private void OutputToConsole(string message)
         {
-            this.console.AppendText(message);
+            this.console.AppendText(DateTime.Now.ToString("yyyyMMddHHmmss")  + "\t" + message);
             this.console.AppendText(Environment.NewLine);
         }
 
@@ -467,7 +538,6 @@ namespace GetEvidenceTool
 
             return canvas;
         }
-
     }
 
     public class WindowInfo

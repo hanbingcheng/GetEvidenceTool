@@ -1,6 +1,6 @@
 ﻿namespace GetEvidenceTool
 {
-    partial class SettingForm
+    partial class FrmSetting
     {
         /// <summary>
         /// Required designer variable.

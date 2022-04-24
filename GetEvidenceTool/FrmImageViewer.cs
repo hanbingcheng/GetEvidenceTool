@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace GetEvidenceTool
 {
-    public partial class ImageViewerForm : Form
+    public partial class FrmImageViewer : Form
     {
-        public ImageViewerForm(Image image)
+        public FrmImageViewer(Image image)
         {
             InitializeComponent();
 

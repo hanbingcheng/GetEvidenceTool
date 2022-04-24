@@ -10,11 +10,11 @@ using System.Windows.Forms;
 
 namespace GetEvidenceTool
 {
-    public partial class SettingForm : Form
+    public partial class FrmSetting : Form
     {
         private bool loaded = false;
 
-        public SettingForm()
+        public FrmSetting()
         {
             InitializeComponent();
 
