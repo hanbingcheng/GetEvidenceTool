@@ -69,6 +69,7 @@ namespace GetEvidenceTool
             Config.Current.User = this.txtDBUser.Text;
             Config.Current.Password = this.txtDBPassword.Text;
             Config.Current.Database = this.txtDBName.Text;
+            Config.Current.exportDatas.Clear();
             foreach (DataGridViewRow row in this.dgvExportData.Rows)
             {
                 Config.Current.exportDatas.Add(
